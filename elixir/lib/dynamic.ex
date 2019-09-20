@@ -133,6 +133,10 @@ defmodule Dynamic do
   defp combine(_key, left = %{}, right = %{}), do: combine(left, right)
   defp combine(_key, _left, right), do: right
 
+  def flatten(input, path) when is_map(input) and map_size(input) == 0 do
+    [{Enum.reverse(path), %{}}]
+  end
+  
   def flatten(input, path \\ []) do
     input
     |> Enum.flat_map(fn {key, value} ->
