@@ -1,3 +1,4 @@
+
 export default class Dynamic {
 	static put(input: Object, path: Array<any>, value) {
 		const [head, ...tail] = path
@@ -10,16 +11,19 @@ export default class Dynamic {
 		return { ...input, [head]: Dynamic.put(child, tail, value) }
 	}
 
-	static delete(input: Object, path: Array<string>) {
+	static delete(input: Dynamic.IObject, path: Array<string>) {
 		const [head, ...tail] = path
 		if (tail.length === 0) {
-			delete (input[head])
-			return { ...input }
+			const { [head]: deleted, ...rest } = input
+			return { ...rest }
 		}
 		const child = input[head]
 		if (child == null || typeof child !== 'object')
 			return input
-		return Dynamic.delete(child, tail)
+		return {
+			...input,
+			[head]: Dynamic.delete(child, tail)
+		}
 	}
 
 
